@@ -1,0 +1,73 @@
+server:
+  port: 8000
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+      force-request: true
+      force-response: true
+  tomcat:
+    uri-encoding: UTF-8
+
+spring:
+  mvc:
+    static-path-pattern: /static/**
+  datasource:
+    #    driver-class-name: org.mariadb.jdbc.Driver
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    #    url: jdbc:mariadb://web-study.ctumsyopmesy.ap-northeast-2.rds.amazonaws.com:3306/jwt?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    url: jdbc:log4jdbc:mariadb://web-study.ctumsyopmesy.ap-northeast-2.rds.amazonaws.com:3306/jwt?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: admin
+    password: 1q2w3e4r
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: 111111
+    password: 111111
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.ssl.trust: smtp.naver.com
+
+mybatis:
+  mapper-locations:
+    - /mappers/*.xml
+
+file:
+  path: C:/project/workspace/git/winiaaid-TeamProject/upload/
+#  path: /Users/gim-yujeong/workspace/git/winiaaid-TeamProject/upload/
+
+# log4jdbc, Mybatis Console Log
+logging:
+  level:
+    com:
+      zaxxer:
+        hikari: INFO
+    javax:
+      sql:
+        DataSource: OFF
+    jdbc:
+      audit: OFF
+      resultset: OFF
+      resultsettable: INFO  #SQL ?? ??? Table? ??? ???.
+      sqlonly: OFF     #SQL? ??? ???.
+      sqltiming: INFO    #SQL? ????? ????.
+      connection : OFF  # ??? ????
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+      springframework:
+        web: DEBUG
+      com:
+        zaxxer:
+          hikari:
+            HikariDataSource: ERROR

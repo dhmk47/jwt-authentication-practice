@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <title>main</title>
+</head>
+<body>
+    <main>
+        <div>
+            <h1>모두가 접근 가능한 페이지</h1>
+        </div>
+        <div>
+            <a href="/user">인증된 권한</a>
+            <a href="/admin">관리자 권한</a>
+            <a href="/signup">회원가입</a>
+        </div>
+        <div>
+            <input type="text" placeholder="아이디">
+            <input type="password" placeholder="비밀번호">
+        </div>
+        <button class="login-button" type="button">로그인</button>
+        <button class="authorization-request">권한 요청</button>
+    </main>
+    <script>
+        const loginButton = document.querySelector(".login-button");
+        const authorizationRequestButton = document.querySelector(".authorization-request");
+
+        let accessToken = null;
+        let refreshToken = null;
+
+        loginButton.onclick = login;
+        authorizationRequestButton.onclick = authorizationRequest;
+
+        function login() {
+            const userInfoInputItems = document.querySelectorAll("input");
+
+            $.ajax({
+                async: false,
+                type: "post",
+                url: `/api/v1/auth/login`,
+                contentType: "application/json",
+                data: JSON.stringify({
+                    "user_id": userInfoInputItems[0].value,
+                    "user_password": userInfoInputItems[1].value
+                }),
+                dataType: "json",
+                success: (response) => {
+                    if(response.data) {
+                        alert("로그인 성공");
+                        location.replace("/main");
+                    }
+                },
+                error: (request, status, error) => {
+                    location.replace("/main");
+                    console.log(request.status);
+                    console.log(request.responseText);
+                    console.log(error);
+                    alert("로그인 실패");
+                }
+            });
+        }
+
+        function authorizationRequest() {
+            $.ajax({
+                async: false,
+                type: "put",
+                url: `/api/v1/auth/test`,
+                contentType: "application/json",
+                data: JSON.stringify({
+                    "test_id": "id",
+                    "test_password": "password"
+                }),
+                dataType: "json",
+                success: (response) => {
+                    if(response.data) {
+                        alert("성공");
+                    }else {
+                        alert("실패");
+                    }
+                },
+                error: (request, status, error) => {
+                    if(request.status == 403) {
+                        alert("접근 권한이 없습니다.");
+                        location.replace("/main");
+                    }else {
+                        alert("요청 실패");
+                        console.log(request.status);
+                        console.log(request.responseText);
+                        console.log(error);
+
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
